@@ -11,6 +11,7 @@ gem 'groundworkcss-rails'
 gem 'sass'
 gem 'haml-rails'
 gem 'mustache'
+gem 'redcarpet'
 
 group :development do
   gem "better_errors"
