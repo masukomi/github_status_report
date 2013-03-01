@@ -1,0 +1,25 @@
+= form_for @contributor do |f|
+  - if @contributor.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@contributor.errors.count, "error")} prohibited this contributor from being saved:"
+      %ul
+        - @contributor.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :login
+    = f.text_field :login
+  .field
+    = f.label :github_url
+    = f.text_field :github_url
+  .field
+    = f.label :avatar_url
+    = f.text_field :avatar_url
+  .field
+    = f.label :last_contributed_at
+    = f.datetime_select :last_contributed_at
+  .actions
+    = f.submit 'Save'

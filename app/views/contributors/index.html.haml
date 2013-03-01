@@ -1,0 +1,27 @@
+%h1 Listing contributors
+
+%table
+  %tr
+    %th Name
+    %th Login
+    %th Github url
+    %th Avatar url
+    %th Last contributed at
+    %th
+    %th
+    %th
+
+  - @contributors.each do |contributor|
+    %tr
+      %td= contributor.name
+      %td= contributor.login
+      %td= contributor.github_url
+      %td= contributor.avatar_url
+      %td= contributor.last_contributed_at
+      %td= link_to 'Show', contributor
+      %td= link_to 'Edit', edit_contributor_path(contributor)
+      %td= link_to 'Destroy', contributor, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Contributor', new_contributor_path

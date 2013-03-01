@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @contributor.name
+%p
+  %b Login:
+  = @contributor.login
+%p
+  %b Github url:
+  = @contributor.github_url
+%p
+  %b Avatar url:
+  = @contributor.avatar_url
+%p
+  %b Last contributed at:
+  = @contributor.last_contributed_at
+
+= link_to 'Edit', edit_contributor_path(@contributor)
+\|
+= link_to 'Back', contributors_path
