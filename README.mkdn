@@ -1,0 +1,7 @@
+# Github Status Report
+
+THIS IS JUST THE BEGINNING.
+
+Very soon, this app will finish coalescing and provide you with a great overview of what your team's been working on, the bugs that have been fixed, and the features that have been added, by project, by user, and more. 
+
+For now though, you'll just have to wait, as this battle station is NOT fully armed and operational. 
