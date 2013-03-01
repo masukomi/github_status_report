@@ -1,0 +1,21 @@
+<% if content_for?(:nav) || content_for?(:sidebar)%>
+	<aside class="one fifth padded border-right">
+		<% if content_for? :nav %>
+			<h3>
+				<i class="icon-reorder"></i>
+				Navigation	
+			</h3>        	
+			<nav>
+				<ul>
+					<%= yield :nav%>
+				</ul>
+			</nav>
+		<%end%>
+		
+		<br/>
+		
+		<% if content_for? :sidebar%>
+			<%= yield :sidebar%>
+		<%end%>
+	</aside>
+<%end%>
