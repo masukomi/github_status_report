@@ -1,2 +1,13 @@
 %h1 Home#index
-%p Find me in app/views/home/index.html.haml
+
+-if @repos.size() > 0
+  -if @repos.size == 1
+
+  -else
+
+-else
+  %p.warning.message
+    You don't have any Repositories configured.
+  =link_to("Let's take care of that now.", {:controller=>:repos, :action=>:new}, {:class=>'button'})
+
+
