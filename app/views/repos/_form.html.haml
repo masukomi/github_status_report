@@ -1,0 +1,28 @@
+= form_for @repo do |f|
+  - if @repo.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@repo.errors.count, "error")} prohibited this repo from being saved:"
+      %ul
+        - @repo.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :github_name
+    = f.text_field :github_name
+  .field
+    = f.label :oauth_token
+    = f.text_field :oauth_token
+  .field
+    = f.label :host
+    = f.text_field :host
+  .field
+    = f.label :api_endpoint
+    = f.text_field :api_endpoint
+  .field
+    = f.label :ticket_url
+    = f.text_field :ticket_url
+  .field
+    = f.label :branch_naming_convention
+    = f.text_field :branch_naming_convention
+  .actions
+    = f.submit 'Save'

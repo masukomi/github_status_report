@@ -1,0 +1,24 @@
+%p#notice= notice
+
+%p
+  %b Github name:
+  = @repo.github_name
+%p
+  %b Oauth token:
+  = @repo.oauth_token
+%p
+  %b Host:
+  = @repo.host
+%p
+  %b Api endpoint:
+  = @repo.api_endpoint
+%p
+  %b Ticket url:
+  = @repo.ticket_url
+%p
+  %b Branch naming convention:
+  = @repo.branch_naming_convention
+
+= link_to 'Edit', edit_repo_path(@repo)
+\|
+= link_to 'Back', repos_path

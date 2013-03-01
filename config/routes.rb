@@ -1,4 +1,7 @@
 GithubStatusReport::Application.routes.draw do
+  resources :repos
+
+
   resources :contributors
 
 

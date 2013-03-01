@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  github_name: MyString
+  oauth_token: MyString
+  host: MyString
+  api_endpoint: MyString
+  ticket_url: MyString
+  branch_naming_convention: MyString
+
+two:
+  github_name: MyString
+  oauth_token: MyString
+  host: MyString
+  api_endpoint: MyString
+  ticket_url: MyString
+  branch_naming_convention: MyString
