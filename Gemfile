@@ -12,6 +12,8 @@ gem 'sass'
 gem 'haml-rails'
 gem 'mustache'
 gem 'redcarpet'
+gem 'json'
+gem 'octokit'
 
 group :development do
   gem "better_errors"
