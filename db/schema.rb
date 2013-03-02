@@ -19,15 +19,23 @@ ActiveRecord::Schema.define(:version => 20130301160146) do
     t.string   "github_url"
     t.string   "avatar_url"
     t.datetime "last_contributed_at"
+    t.integer  "repo_id"
+    t.integer  "project_id"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
   end
 
+  add_index "contributors", ["login"], :name => "index_contributors_on_login"
+
   create_table "projects", :force => true do |t|
     t.string   "name"
+    t.integer  "repo_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "projects", ["name"], :name => "index_projects_on_name"
+  add_index "projects", ["repo_id"], :name => "index_projects_on_repo_id"
 
   create_table "repos", :force => true do |t|
     t.string   "github_name"

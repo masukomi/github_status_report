@@ -6,8 +6,9 @@ class CreateContributors < ActiveRecord::Migration
       t.string :github_url
       t.string :avatar_url
       t.datetime :last_contributed_at
-
+      t.references :repo, :project
       t.timestamps
     end
+    add_index :contributors, :login
   end
 end
