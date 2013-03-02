@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130302005116) do
+ActiveRecord::Schema.define(:version => 20130302035316) do
 
   create_table "contributors", :force => true do |t|
     t.string   "name"
@@ -46,6 +46,11 @@ ActiveRecord::Schema.define(:version => 20130302005116) do
     t.integer  "repo_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
+    t.datetime "closed_at"
+    t.datetime "merged_at"
+    t.string   "status"
+    t.string   "from_branch"
+    t.string   "to_branch"
   end
 
   create_table "repos", :force => true do |t|
