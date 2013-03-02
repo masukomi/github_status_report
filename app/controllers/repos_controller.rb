@@ -5,15 +5,30 @@ class ReposController < ApplicationController
   # params - the params hash
   #          :days - days back to report on. Defaults to 7
   #          :login - the login of the user to report on. Defaults to all
+  #          :assigned - assigned to :login or not. defaults to pull 
+  #                       requests created by, but not assigned to :login
+  #                       Only applicable if :login is specified
   #          :type - the type of pull requests to report on.
   #               Can be bug, add, or '' where '' is all types.
   #          :project - the project to report on. Defaults to all
+  #          :state - 'open' or 'closed'
   # GET /repos/:id/report
   def report
     @repo = Repo.find(params[:id])
+
+    #TODO - actually support these params
+    @days = params[:days] || 7
+    @login = params[:login]
+    @type = params[:type]
+    @state = params[:state] || 'closed'
+    #END TODO
+
     # initally let's just deal with CLOSED
     # pull requests, because these represent completed work
     # assuming they're merged in.
+    @pull_requests = @repo.get_closed_pull_requests(false).sort_by(&:merged_at)
+                                          # false: don't include unmerged
+
 
   end
 

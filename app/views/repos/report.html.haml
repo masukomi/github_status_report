@@ -1,0 +1,30 @@
+%h1
+  =@repo.github_name
+
+%h2
+  - if @state == 'closed'
+    Last
+    =@days
+    day's
+  =@state.upcase
+  Pull Requests 
+  ="#{@login.nil? ? '' : "#{@assigned ? 'for ' : 'by ' }#{@login}"} on #{@repo.github_name}"
+  as of 
+  = Time.now.strftime("%m/%d")
+
+  -#TODO break them down by project and type (sorted by date within that)
+  -@pull_requests.each do |pr|
+    %h3
+      -if pr.ticket_id
+        =pr.ticket_id
+      -if pr.type and ['bug', 'add'].include? pr.type
+        =pr.type == 'bug' ? 'Bug' : "Feature #{pr.type.inspect}"
+      =pr.title
+    %p
+      Merged on
+      =pr.merged_at.strftime("%m/%d")
+    .geeky
+      %ul
+        %li
+          ="#{pr.from_branch}->#{pr.to_branch}"
+      
