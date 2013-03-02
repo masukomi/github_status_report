@@ -1,4 +1,22 @@
 class ReposController < ApplicationController
+
+  # public reports
+  # 
+  # params - the params hash
+  #          :days - days back to report on. Defaults to 7
+  #          :login - the login of the user to report on. Defaults to all
+  #          :type - the type of pull requests to report on.
+  #               Can be bug, add, or '' where '' is all types.
+  #          :project - the project to report on. Defaults to all
+  # GET /repos/:id/report
+  def report
+    @repo = Repo.find(params[:id])
+    # initally let's just deal with CLOSED
+    # pull requests, because these represent completed work
+    # assuming they're merged in.
+
+  end
+
   # GET /repos
   # GET /repos.json
   def index

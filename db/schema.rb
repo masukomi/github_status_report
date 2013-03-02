@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130301160146) do
+ActiveRecord::Schema.define(:version => 20130302005116) do
 
   create_table "contributors", :force => true do |t|
     t.string   "name"
@@ -36,6 +36,17 @@ ActiveRecord::Schema.define(:version => 20130301160146) do
 
   add_index "projects", ["name"], :name => "index_projects_on_name"
   add_index "projects", ["repo_id"], :name => "index_projects_on_repo_id"
+
+  create_table "pull_requests", :force => true do |t|
+    t.string   "title"
+    t.string   "type"
+    t.string   "ticket_id"
+    t.integer  "project_id"
+    t.integer  "contributor_id"
+    t.integer  "repo_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
   create_table "repos", :force => true do |t|
     t.string   "github_name"

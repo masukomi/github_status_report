@@ -55,7 +55,7 @@
   .field
     = f.label :branch_naming_convention, 'Branch Naming Convention'
     = f.text_field :branch_naming_convention, 
-      :placeholder=>':ticket_id_:proj_:type_:title',
+      :placeholder=>':ticket_:project_:type_:title',
       :class=>'tooltip', :title=>'Using the options below generate a string that describes your branch names'
     %br
     .information
@@ -65,17 +65,17 @@
         you chose from the branches in your repository. To this end we've 
         come up with a series of items that you can insert into your branch 
         names, in whatever order works best for you. Everything is optional
-        but leaving out something like :ticket_id would mean would couldn't 
+        but leaving out something like :ticket would mean would couldn't 
         extract the ticket number and link back to your ticketing system.
 
         **All options must be separated with underscores.**
         
         The options are:
 
-        * :ticket_id
-          * For most systems this is an integer that we can insert into
-            the 'ticket_id' of the ticket url you specified above.
-        * :proj
+        * :ticket
+          * For most systems this is an integer id that we can insert into
+            the 'ticket_id' portion of the ticket url you specified above.
+        * :project
           * This should be a short name that indicates what project or client 
             this work is for. We recommend 3 or four letter abbreviations, but
             there is no limit.
@@ -89,7 +89,7 @@
             the branch is about.
 
         #### Examples
-        If you enter `:ticket_id_:proj_:type_:title` you should create branch 
+        If you enter `:ticket_id_:project_:type_:title` you should create branch 
         branch names like `1234_docs_add_create_introductory_readme` GSR would 
         interpret that as `<ticket_id 1234>_<project docs>_<type add>_<title create introductory readme>`
 

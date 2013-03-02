@@ -1,7 +1,11 @@
 GithubStatusReport::Application.routes.draw do
   get "home/index"
 
-  resources :repos
+  resources :repos do
+    member do
+      get 'report'
+    end
+  end
 
 
   resources :contributors
