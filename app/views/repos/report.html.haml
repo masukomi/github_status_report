@@ -13,18 +13,22 @@
   = Time.now.strftime("%m/%d")
 
   -#TODO break them down by project and type (sorted by date within that)
-  -@pull_requests.each do |pr|
-    %h3
-      -if pr.ticket_id
-        =pr.ticket_id
-      -if pr.type and ['bug', 'add'].include? pr.type
-        =pr.type == 'bug' ? 'Bug' : "Feature #{pr.type.inspect}"
-      =pr.title
-    %p
-      Merged on
-      =pr.merged_at.strftime("%m/%d")
-    .geeky
-      %ul
-        %li
-          ="#{pr.from_branch}->#{pr.to_branch}"
-      
+  -@sorted_pull_requests.keys.sort.each do |key|
+    -spr = @sorted_pull_requests[key]
+    -# spr = #{:bugs=>[...], :adds=>[...], :unknown=>[...]}
+    .project_section
+      %h2.project_heading
+        Project: 
+        =(key == '' ? 'Unspecified' : key)
+      -[:bugs, :adds, :unknown].each do |type|
+        -if spr[type].size() > 0
+          -if type == :bugs
+            %h3 Bug Fixes
+          -elsif type == :adds
+            %h3 New Features
+          -else
+            %h3
+              Misc.
+          -spr[type].each do |pr|
+            =render(:partial=>'pull_request_listing', 
+              :locals=>{:pr=>pr, :repo=>@repo}) 

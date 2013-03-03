@@ -1,8 +1,25 @@
-class PullRequest < ActiveRecord::Base
-  belongs_to :project
-  belongs_to :contributor
-  belongs_to :repo
-  attr_accessible :ticket_id, :title, :type, :created_at, :closed_at, :merged_at, :status, :from_branch, :to_branch
+class PullRequest #< ActiveRecord::Base
+  #belongs_to :project
+  #belongs_to :contributor  # who created the pull request
+  #belongs_to :repo
+  attr_accessor :ticket_id,
+  #attr_accessible :ticket_id, 
+                  :repo,
+                  :project,
+                  :title, 
+                  :type, 
+                  :created_at, 
+                  :closed_at, 
+                  :merged_at, 
+                  :status, 
+                  :from_branch, 
+                  :to_branch,
+                  :creator, # (Contributor) who created the pull request
+                  :assignee, # (Contributor) who's assigned to the pull request (reviewer)
+                  :number, 
+                  :url # links to this pull request's page 
+
+
 
   def self.create_from_pull_and_repo(pull_data, repo) 
     # pull_data is a hash that comes from the github pull request api
@@ -18,6 +35,7 @@ class PullRequest < ActiveRecord::Base
       # bnd: Branch Name Data
     pr.ticket_id = bnd[:ticket]   #might be nil
     pr.type = bnd[:type]          # might be nil
+    pr.project = bnd[:project]
     if pr.title != pr.from_branch.sub('_', ' ')
       pr.title = pull_data['title']
     else
@@ -30,13 +48,27 @@ class PullRequest < ActiveRecord::Base
     #TODO make the Contributor model suck down all the pertinent info
     # and create a new object if one wasn't found with that login
     # *in that repo*
-    contributor = Contributor.new(:login=>pull_data['user']['login'])
-    pr.contributor = contributor
+    creator = Contributor.new(
+      :login=>pull_data['user']['login'],
+      :github_url=>pull_data['user']['url']
+      )
+    pr.creator = creator
+    if (pull_data['assignee'] and pull_data['assignee'].size() > 0)
+      assignee = Contributor.new(
+        :login=>pull_data['assignee']['login'],
+        :github_url=> pull_data['assignee']['url']
+        )
+      pr.assignee = assignee
+    end
 
 
     pr.created_at = pull_data['created_at'].nil? ? nil : Date.parse(pull_data['created_at'])
     pr.merged_at = pull_data['merged_at'].nil? ? nil : Date.parse(pull_data['merged_at']) 
     pr.closed_at = pull_data['closed_at'].nil? ? nil : Date.parse(pull_data['closed_at']) 
+
+    pr.url = pull_data['url'].sub('/api/v3/repos', '').sub('pulls/', 'pull/')\
+              .sub('api.github.com', 'github.com') # for those using the main one 
+    pr.number =pull_data['number']
 
     return pr
 

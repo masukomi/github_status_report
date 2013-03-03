@@ -6,6 +6,39 @@ class Repo < ActiveRecord::Base
 
 
 
+  # Public:  returns a sorted collection of pull RequestS
+  #           TEMPORARILY limited to closed pull requests
+  # include_unmerged - defaults to false
+  def get_sorted_pull_requests(include_unmerged = false)
+    cprs = get_closed_pull_requests(include_unmerged)
+     #cprs = Closed Pull RequestS
+    cpr_by_proj = {}
+    cprs.each do |cpr| # Closed Pull Request
+      temp_proj = cpr.project || '' # don't want nil
+      unless cpr_by_proj.has_key? temp_proj
+        cpr_by_proj[temp_proj] = {:bugs=>[], :adds=>[], :unknown=>[]}
+      end
+      type = cpr.type || 'unknown'
+      if (cpr.type == 'bug')
+        cpr_by_proj[temp_proj][:bugs] << cpr
+      elsif cpr.type == 'add'
+        cpr_by_proj[temp_proj][:adds] << cpr
+      else
+        cpr_by_proj[temp_proj][:unknown] << cpr
+      end
+    end
+    
+    cpr_by_proj.keys.each do |key|
+      cpr_by_proj[key][:bugs].sort_by!(&:merged_at)
+      cpr_by_proj[key][:adds].sort_by!(&:merged_at)
+      cpr_by_proj[key][:unknown].sort_by!(&:merged_at)
+    end
+
+    return cpr_by_proj
+
+  end
+
+
   # Public: gets all closed pull requests for this repo
   # 
   # include_unmerged - indicates if you want unmerged pull requests

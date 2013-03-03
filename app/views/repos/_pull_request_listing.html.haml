@@ -1,0 +1,23 @@
+%h4
+  -if pr.ticket_id
+    -if repo.ticket_url
+      =link_to(pr.ticket_id, Mustache.render(repo.ticket_url, {'ticket_id'=>pr.ticket_id}))
+    -else
+      =pr.ticket_id
+  -if pr.type and ['bug', 'add'].include? pr.type
+    =pr.type == 'bug' ? 'Bug' : "Feature #{pr.type.inspect}"
+  =pr.title
+%p
+  Pull request 
+  =link_to("##{pr.number}", pr.url)
+  created by
+  =link_to(pr.creator.login, pr.creator.github_url)
+  -if pr.assignee
+    Reviewed by
+    =link_to(pr.assignee.login, pr.assignee.github_url)
+  and merged on
+  =pr.merged_at.strftime("%m/%d")
+
+%p
+  ="#{pr.from_branch}->#{pr.to_branch}"
+

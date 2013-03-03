@@ -1,3 +1,4 @@
+require 'mustache'
 class ReposController < ApplicationController
 
   # public reports
@@ -26,9 +27,10 @@ class ReposController < ApplicationController
     # initally let's just deal with CLOSED
     # pull requests, because these represent completed work
     # assuming they're merged in.
-    @pull_requests = @repo.get_closed_pull_requests(false).sort_by(&:merged_at)
+    #@pull_requests = @repo.get_closed_pull_requests(false).sort_by(&:merged_at)
+    @sorted_pull_requests = @repo.get_sorted_pull_requests(false)
                                           # false: don't include unmerged
-
+                                          # comes pre-sorted
 
   end
 
