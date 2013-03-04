@@ -1,4 +1,7 @@
 class Repo < ActiveRecord::Base
+
+  SECONDS_IN_A_DAY=60*60*24
+
   has_many :projects
   has_many :contributers
   #TODO add support for octokit proxy param
@@ -8,9 +11,14 @@ class Repo < ActiveRecord::Base
 
   # Public:  returns a sorted collection of pull RequestS
   #           TEMPORARILY limited to closed pull requests
-  # include_unmerged - defaults to false
-  def get_sorted_pull_requests(include_unmerged = false)
-    cprs = get_closed_pull_requests(include_unmerged)
+  # options - options to control filtering of results
+  #           :days - the number of days back to go. defaults to 7
+  #           :include_unmerged - defaults to false
+  #                     indicates if unmerged pull Requests 
+  #                     should be included in the results.
+  
+  def get_sorted_pull_requests(options = {:include_unmerged=>false, :days=>7})
+    cprs = get_closed_pull_requests(options)
      #cprs = Closed Pull RequestS
     cpr_by_proj = {}
     cprs.each do |cpr| # Closed Pull Request
@@ -41,9 +49,14 @@ class Repo < ActiveRecord::Base
 
   # Public: gets all closed pull requests for this repo
   # 
-  # include_unmerged - indicates if you want unmerged pull requests
-  #                    included in the resulting data
-  def get_closed_pull_requests(include_unmerged = false)
+  # options - options to control filtering of results
+  #           :days - the number of days back to go
+  #           :include_unmerged - defaults to false
+  #                     indicates if unmerged pull Requests 
+  #                     should be included in the results.
+  def get_closed_pull_requests(options)
+    epoch_start_time = DateTime.now().to_time.to_i
+    options[:days] = 7 unless options[:days]
 
     Octokit.configure do |config|
 
@@ -62,9 +75,13 @@ class Repo < ActiveRecord::Base
     closed_pull_requests = []
     closed_pull_requests_data.each do | cpr |
       pr = PullRequest.create_from_pull_and_repo(cpr, self)
-      if (pr.merged_at or include_unmerged)
-        closed_pull_requests << pr
-      end
+      # skip unmerged unless options[:include_unmerged]
+      next if (! pr.merged_at and not options[:include_unmerged])
+      # skip unless within past option[:days] days
+      epoch_merged_date = pr.merged_at.to_time.to_i
+      next if epoch_start_time - epoch_merged_date > options[:days] * SECONDS_IN_A_DAY
+
+      closed_pull_requests << pr
     end
 
     return closed_pull_requests

@@ -18,7 +18,7 @@ class ReposController < ApplicationController
     @repo = Repo.find(params[:id])
 
     #TODO - actually support these params
-    @days = params[:days] || 7
+    @days = params[:days].nil? ? 7 : params[:days].to_i
     @login = params[:login]
     @type = params[:type]
     @state = params[:state] || 'closed'
@@ -28,7 +28,11 @@ class ReposController < ApplicationController
     # pull requests, because these represent completed work
     # assuming they're merged in.
     #@pull_requests = @repo.get_closed_pull_requests(false).sort_by(&:merged_at)
-    @sorted_pull_requests = @repo.get_sorted_pull_requests(false)
+    options = {
+      :include_unmerged=>false, #TODO handle this later
+      :days=>@days
+    }
+    @sorted_pull_requests = @repo.get_sorted_pull_requests(options)
                                           # false: don't include unmerged
                                           # comes pre-sorted
 

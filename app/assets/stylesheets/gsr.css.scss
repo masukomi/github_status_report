@@ -22,3 +22,12 @@ ul.reports_list{
 .copyright_notice{
   font-size: 80%;
 }
+
+@media print 
+{
+    .no_print 
+    {
+        display:none;
+    }
+}
+

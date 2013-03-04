@@ -1,34 +1,48 @@
-%h1
-  =@repo.github_name
+.row
+  .one.fifth.no_print
+    %h3 Search for pulls:
+    =form_for(@repo, {:url=>report_repo_path(@repo), :method=>'GET'}) do |f|
+      .row
+        .one.third
+          =f.label :days
+        .one.third
+          =text_field_tag :days, @days, :size=>3, :class=>'tooltip',
+            :title=>'How many days back should we go?', :placeholder=>'7'
+        .one.third
+          &nbsp;
+      .row
+        .two.thirds
+          =f.submit 'Search'
+  .four.fifths
 
-%h2
-  - if @state == 'closed'
-    Last
-    =@days
-    day's
-  =@state.upcase
-  Pull Requests 
-  ="#{@login.nil? ? '' : "#{@assigned ? 'for ' : 'by ' }#{@login}"} on #{@repo.github_name}"
-  as of 
-  = Time.now.strftime("%m/%d")
+    %h2
+      - if @state == 'closed'
+        Last
+        =@days
+        day's
+      =@state.upcase
+      Pull Requests 
+      ="#{@login.nil? ? '' : "#{@assigned ? 'for ' : 'by ' }#{@login}"} on #{@repo.github_name}"
+      as of 
+      = Time.now.strftime("%m/%d")
 
-  -#TODO break them down by project and type (sorted by date within that)
-  -@sorted_pull_requests.keys.sort.each do |key|
-    -spr = @sorted_pull_requests[key]
-    -# spr = #{:bugs=>[...], :adds=>[...], :unknown=>[...]}
-    .project_section
-      %h2.project_heading
-        Project: 
-        =(key == '' ? 'Unspecified' : key)
-      -[:bugs, :adds, :unknown].each do |type|
-        -if spr[type].size() > 0
-          -if type == :bugs
-            %h3 Bug Fixes
-          -elsif type == :adds
-            %h3 New Features
-          -else
-            %h3
-              Misc.
-          -spr[type].each do |pr|
-            =render(:partial=>'pull_request_listing', 
-              :locals=>{:pr=>pr, :repo=>@repo}) 
+      -#TODO break them down by project and type (sorted by date within that)
+      -@sorted_pull_requests.keys.sort.each do |key|
+        -spr = @sorted_pull_requests[key]
+        -# spr = #{:bugs=>[...], :adds=>[...], :unknown=>[...]}
+        .project_section
+          %h2.project_heading
+            Project: 
+            =(key == '' ? 'Unspecified' : key)
+          -[:bugs, :adds, :unknown].each do |type|
+            -if spr[type].size() > 0
+              -if type == :bugs
+                %h3 Bug Fixes
+              -elsif type == :adds
+                %h3 New Features
+              -else
+                %h3
+                  Misc.
+              -spr[type].each do |pr|
+                =render(:partial=>'pull_request_listing', 
+                  :locals=>{:pr=>pr, :repo=>@repo}) 
