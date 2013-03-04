@@ -1,19 +1,40 @@
 %h1 Listing projects
 
-%table
-  %tr
-    %th Name
-    %th
-    %th
-    %th
+.information
+  %p
+    %i
+      You do not have to specify any projects. 
+    If you do they will be used 
+    to help restrict what projects a pull request can be associated with.
+    This is useful when your repo has branches that frequently don't adhere
+    to your prescribed naming convention.
 
-  - @projects.each do |project|
+
+-if @projects.size() > 0
+  %table
     %tr
-      %td= project.name
-      %td= link_to 'Show', project
-      %td= link_to 'Edit', edit_project_path(project)
-      %td= link_to 'Destroy', project, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      %th Repo
+      %th Name
+      %th
+      %th
+      %th
 
-%br
+    - @projects.each do |project|
+      %tr
+        %td= project.repo.github_name
+        %td= project.name
+        %td= link_to 'Show', project
+        %td= link_to 'Edit', edit_project_path(project)
+        %td= link_to 'Destroy', project, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
-= link_to 'New Project', new_project_path
+-else
+  %p.warning.message
+    You don't have any Projects configured.
+-if @repo_count > 0
+  = link_to 'Create a new Project', new_project_path, {:class=>'button'}
+-else
+  .information
+    Before you can create a project, you must first create a Repository
+    to associate the project with.
+    %br
+    =link_to("Create a Repo", new_repo_path(), {:class=>'button'})

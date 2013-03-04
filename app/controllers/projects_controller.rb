@@ -2,8 +2,8 @@ class ProjectsController < ApplicationController
   # GET /projects
   # GET /projects.json
   def index
-    @projects = Project.all
-
+    @projects = Project.includes(:repo).all.sort_by(&:name)
+    @repo_count = Repo.count
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @projects }
@@ -13,7 +13,7 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
-    @project = Project.find(params[:id])
+    @project = Project.includes(:repo).find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -25,6 +25,7 @@ class ProjectsController < ApplicationController
   # GET /projects/new.json
   def new
     @project = Project.new
+    @repos = Repo.all
 
     respond_to do |format|
       format.html # new.html.erb
@@ -34,19 +35,23 @@ class ProjectsController < ApplicationController
 
   # GET /projects/1/edit
   def edit
-    @project = Project.find(params[:id])
+    @repos = Repo.all
+    @project = Project.includes(:repo).find(params[:id])
   end
 
   # POST /projects
   # POST /projects.json
   def create
+    repo_id = params[:project].delete(:repo_id)
     @project = Project.new(params[:project])
+    @project.repo_id = repo_id
 
     respond_to do |format|
       if @project.save
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
         format.json { render json: @project, status: :created, location: @project }
       else
+        @repos = Repo.all
         format.html { render action: "new" }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end

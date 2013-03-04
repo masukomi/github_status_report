@@ -7,7 +7,18 @@
           %li= msg
 
   .field
+    = f.label :repo
+    = collection_select(:project, :repo_id, @repos, :id, :github_name, {:prompt => false})
+  .field
     = f.label :name
     = f.text_field :name
+    .information
+      :markdown
+        Project names *must* correspond to the project / client name 
+        you expect to see in branch names, and must not include underscores.
+        
+        For example, if you client was "Big Co." you'd probably expect 
+        branch names to include 'bigco': `1234_bigco_bug_broken_icon_on_tuesday`
+        If they contained 'big_co' or 'big' though it would not match up. 
   .actions
     = f.submit 'Save'
