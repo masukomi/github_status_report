@@ -1,4 +1,5 @@
 class PullRequest #< ActiveRecord::Base
+  UNKNOWN_PROJECT_NAME='unknown'
   #belongs_to :project
   #belongs_to :contributor  # who created the pull request
   #belongs_to :repo
@@ -17,6 +18,7 @@ class PullRequest #< ActiveRecord::Base
                   :creator, # (Contributor) who created the pull request
                   :assignee, # (Contributor) who's assigned to the pull request (reviewer)
                   :number, 
+                  :raw_bn_data,
                   :url # links to this pull request's page 
 
 
@@ -24,6 +26,8 @@ class PullRequest #< ActiveRecord::Base
   def self.create_from_pull_and_repo(pull_data, repo) 
     # pull_data is a hash that comes from the github pull request api
     # see http://developer.github.com/v3/pulls/
+
+    project_names = repo.projects.collect(&:name)
     
     # this object will NOT be saved
     pr = PullRequest.new()
@@ -33,9 +37,19 @@ class PullRequest #< ActiveRecord::Base
     #to_branch = get_branch_from_pull(p, :to)
     bnd = self.extract_data_from_branch_name(pr.from_branch, repo.branch_naming_convention)
       # bnd: Branch Name Data
+    pr.raw_bn_data=bnd
     pr.ticket_id = bnd[:ticket]   #might be nil
     pr.type = bnd[:type]          # might be nil
-    pr.project = bnd[:project]
+
+    if project_names.size() == 0
+      pr.project = bnd[:project]
+    else
+      if project_names.include? bnd[:project]
+        pr.project = bnd[:project]
+      else
+        pr.project = UNKNOWN_PROJECT_NAME
+      end
+    end
     if pr.title != pr.from_branch.sub('_', ' ')
       pr.title = pull_data['title']
     else
