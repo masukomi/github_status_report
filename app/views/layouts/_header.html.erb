@@ -5,7 +5,7 @@
 			
 				<h1 class="responsive">
 					<a href="/">
-						<%= ::Rails.application.class.to_s.split("::").first %>
+						Github Status Report
 					</a>
 				</h1>
 					
@@ -13,9 +13,7 @@
 			<div class="two thirds padded">
 				<nav class="inline pull-right">
 					<ul>
-						<li><a href="#">Link 1</a></li>
-						<li><a href="#">Link 2</a></li>
-						<li><a href="#">Link 3</a></li>
+						<li><%=link_to("Repos", repos_path()) %></li>
 					</ul>
 				</nav>
 			</div>

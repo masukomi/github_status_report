@@ -1,6 +1,6 @@
 -if @repos.size() > 0
   -@repos.each do |repo|
-    =link_to("View recent work on #{repo.github_name}", repo_path(repo))
+    =link_to("View recent work on #{repo.github_name}", report_repo_path(repo))
 -else
   %p.warning.message
     You don't have any Repositories configured.
