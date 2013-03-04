@@ -37,7 +37,7 @@ class ReposController < ApplicationController
   # GET /repos
   # GET /repos.json
   def index
-    @repos = Repo.all
+    @repos = Repo.all.sort_by(&:github_name)
 
     respond_to do |format|
       format.html # index.html.erb
