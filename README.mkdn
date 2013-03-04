@@ -1,7 +1,30 @@
-# Github Status Report
+# GitHub Status Report (GSR)
 
-THIS IS JUST THE BEGINNING.
+This simple Rails app provides your company with an easy way to see what your developers have been accomplishing recently. 
 
-Very soon, this app will finish coalescing and provide you with a great overview of what your team's been working on, the bugs that have been fixed, and the features that have been added, by project, by user, and more. 
+By using a simple, and configurable branch naming convention GitHub Status Report (GSR) can inspect the pull requests on your GitHub repositories (works with GitHub enterprise too) and generate lists of bug fixes, and new features by project / client. It'll extract ticket ids and link to your ticket tracker, even if you're not using GitHub's.
 
-For now though, you'll just have to wait, as this battle station is NOT fully armed and operational. 
+Using a consistent, and useful, naming convention for your branches will also result in you having a clue what's in each one. *Crazy Talk!*
+
+## Current
+Currently it will just show a breakdown of the bugs and feature request for each project over the last 7 days on any configured repo.
+
+## Coming Soon
+The following functionality already exists in a proof of concept command line script, and will be ported to GSR: 
+
+Limiting of results by: 
+
+* assignee (of open tickets)
+* creator (of pull request)
+* type (bug / feature)
+* project / client
+* state (open / closed)
+
+The intention is to add a form to the top of each report that will allow you to specify those options, and then bookmark the customized report (if you so desire).
+
+### Also coming soon...
+#### Pre-fetching
+A rake task will be created to run in the background and pre-fetch pull requests. V3 of the GitHub API doesn't allow you to specify a date range for closed pull requests, so unfortunately polling it pull gets longer every time someone closes a pull request. 
+
+#### **Your great idea.**
+If you've found this useful, then you've probably got an idea on how to make it more useful. The project's tiny and pull requests that improve things for everyone will be happily accepted.
