@@ -1,5 +1,6 @@
 class PullRequest #< ActiveRecord::Base
   UNKNOWN_PROJECT_NAME='unknown'
+  KNOWN_TYPES=['bug', 'add', nil]
   #belongs_to :project
   #belongs_to :contributor  # who created the pull request
   #belongs_to :repo
@@ -39,7 +40,11 @@ class PullRequest #< ActiveRecord::Base
       # bnd: Branch Name Data
     pr.raw_bn_data=bnd
     pr.ticket_id = bnd[:ticket]   #might be nil
-    pr.type = bnd[:type]          # might be nil
+    if KNOWN_TYPES.include? bnd[:type]
+      pr.type = bnd[:type]          # might be nil
+    else
+      pr.type = nil
+    end
 
     if project_names.size() == 0
       pr.project = bnd[:project]

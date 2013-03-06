@@ -20,7 +20,7 @@ class ReposController < ApplicationController
     #TODO - actually support these params
     @days = params[:days].nil? ? 7 : params[:days].to_i
     @login = params[:login]
-    @type = params[:type]
+    @type = params[:type].blank? ? nil : params[:type] # nil gets us all types
     @state = params[:state] || 'closed'
     #END TODO
 
@@ -30,7 +30,8 @@ class ReposController < ApplicationController
     #@pull_requests = @repo.get_closed_pull_requests(false).sort_by(&:merged_at)
     options = {
       :include_unmerged=>false, #TODO handle this later
-      :days=>@days
+      :days=>@days,
+      :type=>@type
     }
     @sorted_pull_requests = @repo.get_sorted_pull_requests(options)
                                           # false: don't include unmerged

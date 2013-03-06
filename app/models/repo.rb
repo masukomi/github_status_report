@@ -80,7 +80,8 @@ class Repo < ActiveRecord::Base
       # skip unless within past option[:days] days
       epoch_merged_date = pr.merged_at.to_time.to_i
       next if epoch_start_time - epoch_merged_date > options[:days] * SECONDS_IN_A_DAY
-
+      next if options[:type] and pr.type != options[:type]
+        # PullRequest guarantees they will be 'bug', 'add', or nil
       closed_pull_requests << pr
     end
 

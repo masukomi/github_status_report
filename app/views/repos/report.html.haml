@@ -11,6 +11,11 @@
         .one.third
           &nbsp;
       .row
+        .one.thirds
+          =f.label :type
+        .one.thirds
+          =select_tag 'type', options_for_select([['All', ''],['Bugs', 'bug'],['Features', 'add']], @type)
+      .row
         .two.thirds
           =f.submit 'Search'
   .four.fifths
