@@ -11,15 +11,41 @@
     = f.text_field :name
   .field
     = f.label :domain
-    = f.text_field :domain
+    = f.text_field :domain, 
+      :placeholder=>'https://github.com OR https://github.mycompany.com'
   .field
     = f.label :api_endpoint
-    = f.text_field :api_endpoint
+    = f.text_field :api_endpoint, 
+      :placeholder=>'https://api.github.com OR https://github.mycompany.com/api/v3'
   .field
-    = f.label :client_id
+    = f.label :client_id, "Client ID"
     = f.text_field :client_id
+  %br
+    .information
+      :markdown
+        # Client ID
+        GitHub Status Report must be registered with each GitHub installation
+        you'll be interacting with. If you're repositories are on GitHub.com 
+        you'll need to go to 
+        [https://github.com/settings/applications/new](https://github.com/settings/applications/new)
+        If you have a GitHub Enterprise install just replace github.com
+        with the domain of your install.
+        
+        The "Callback URL" should look like "http://example.com" OR 
+        "http://example.com:3000" if you're running it on port 3000. 
+        "http://localhost:3000" is perfectly acceptable if you're just testing 
+        things locally and haven't installed it in a shared location yet. 
+
+        Once you've registered your GSR you'll be presented with a Client ID
+        and a Client Secret.
+
   .field
     = f.label :client_secret
     = f.text_field :client_secret
+  %br
+    .information
+      :markdown
+        # Client Secret
+        See the instructions for Client ID above.
   .actions
     = f.submit 'Save'

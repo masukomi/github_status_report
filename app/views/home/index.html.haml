@@ -1,12 +1,17 @@
--if @repos.size() > 0
-  %h2 View recent work on:
-  %ul.reports_list
-    -@repos.each do |repo|
-      %li
-        =link_to(repo.github_name, report_repo_path(repo), {:class=>'button'})
+-if @git_hubs_count > 0
+  -if @repos.size() > 0
+    %h2 View recent work on:
+    %ul.reports_list
+      -@repos.each do |repo|
+        %li
+          =link_to(repo.github_name, report_repo_path(repo), {:class=>'button'})
+  -else
+    %p.warning.message
+      %b Step 2:
+      Set up a repository for us to report on.
+    =link_to("Let's set one up now...", {:controller=>:repos, :action=>:new}, {:class=>'button'})
 -else
   %p.warning.message
-    You don't have any Repositories configured.
-  =link_to("Let's take care of that now.", {:controller=>:repos, :action=>:new}, {:class=>'button'})
-
-
+    %b Step 1:
+    Configure a GitHub install for us to communicate with.
+  =link_to("Let's configure one now...", {:controller=>:git_hubs, :action=>:new}, {:class=>'button'})
