@@ -1,4 +1,7 @@
 GithubStatusReport::Application.routes.draw do
+  resources :git_hubs
+
+
   get "home/index"
 
   resources :repos do

@@ -1,0 +1,25 @@
+= form_for @git_hub do |f|
+  - if @git_hub.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@git_hub.errors.count, "error")} prohibited this git_hub from being saved:"
+      %ul
+        - @git_hub.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :domain
+    = f.text_field :domain
+  .field
+    = f.label :api_endpoint
+    = f.text_field :api_endpoint
+  .field
+    = f.label :client_id
+    = f.text_field :client_id
+  .field
+    = f.label :client_secret
+    = f.text_field :client_secret
+  .actions
+    = f.submit 'Save'

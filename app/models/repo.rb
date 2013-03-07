@@ -2,10 +2,17 @@ class Repo < ActiveRecord::Base
 
   SECONDS_IN_A_DAY=60*60*24
 
+  belongs_to :git_hub
   has_many :projects
   has_many :contributers
+
+  validates_presence_of :git_hub
+
   #TODO add support for octokit proxy param
-  attr_accessible :api_endpoint, :branch_naming_convention, :github_name, :host, :oauth_token, :ticket_url
+  attr_accessible :branch_naming_convention, 
+                  :github_name, 
+                  :oauth_token, 
+                  :ticket_url
 
 
 
@@ -55,17 +62,18 @@ class Repo < ActiveRecord::Base
   #                     indicates if unmerged pull Requests 
   #                     should be included in the results.
   def get_closed_pull_requests(options)
+    raise "This repo has no GitHub object" if github.nil?
     epoch_start_time = DateTime.now().to_time.to_i
     options[:days] = 7 unless options[:days]
 
     Octokit.configure do |config|
 
       config.login        = github_name.split('/')[0]
-      config.web_endpoint = host
+      config.web_endpoint = git_hub.domain
       config.oauth_token  = oauth_token
       #TODO add support for github_proxy
       #config.proxy        = github_proxy if github_proxy
-      config.api_endpoint = api_endpoint
+      config.api_endpoint = git_hub.api_endpoint
     end
 
     closed_pull_requests_data = Octokit.pull_requests(github_name, 'closed')

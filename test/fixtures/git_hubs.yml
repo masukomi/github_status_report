@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  domain: MyString
+  api_endpoint: MyString
+  client_id: MyString
+  client_secret: MyString
+
+two:
+  name: MyString
+  domain: MyString
+  api_endpoint: MyString
+  client_id: MyString
+  client_secret: MyString

@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @git_hub.name
+%p
+  %b Domain:
+  = @git_hub.domain
+%p
+  %b Api endpoint:
+  = @git_hub.api_endpoint
+%p
+  %b Client:
+  = @git_hub.client_id
+%p
+  %b Client secret:
+  = @git_hub.client_secret
+
+= link_to 'Edit', edit_git_hub_path(@git_hub)
+\|
+= link_to 'Back', git_hubs_path

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130303235349) do
+ActiveRecord::Schema.define(:version => 20130307135350) do
 
   create_table "contributors", :force => true do |t|
     t.string   "name"
@@ -27,6 +27,16 @@ ActiveRecord::Schema.define(:version => 20130303235349) do
 
   add_index "contributors", ["login"], :name => "index_contributors_on_login"
 
+  create_table "git_hubs", :force => true do |t|
+    t.string   "name"
+    t.string   "domain"
+    t.string   "api_endpoint"
+    t.string   "client_id"
+    t.string   "client_secret"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
   create_table "projects", :force => true do |t|
     t.string   "name"
     t.integer  "repo_id"
@@ -40,12 +50,11 @@ ActiveRecord::Schema.define(:version => 20130303235349) do
   create_table "repos", :force => true do |t|
     t.string   "github_name"
     t.string   "oauth_token"
-    t.string   "host"
-    t.string   "api_endpoint"
     t.string   "ticket_url"
     t.string   "branch_naming_convention"
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
+    t.integer  "git_hub_id"
   end
 
 end
