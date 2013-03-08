@@ -1,3 +1,8 @@
+-if @git_hub.repos.size() == 0
+  .warning.message
+    Looks good. Now let's set up a repo you'd like to report on.
+  =link_to "Create a Repo", new_repo_path(), {:class=>'button'}
+
 %p#notice= notice
 
 %p

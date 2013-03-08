@@ -4,7 +4,14 @@
     %ul.reports_list
       -@repos.each do |repo|
         %li
-          =link_to(repo.github_name, report_repo_path(repo), {:class=>'button'})
+          -if ! repo.oauth_token.blank?
+            =link_to(repo.github_name, report_repo_path(repo), {:class=>'button'})
+          -else
+            = repo.github_name
+            (requires OAuth token)
+            %br
+            =link_to "Authorize access", {:controller=>:repos, 
+              :action=>:send_oauth, :id=>@repo.id},{:class=>'button'}
   -else
     %p.warning.message
       %b Step 2:

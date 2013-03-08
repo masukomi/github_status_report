@@ -1,17 +1,20 @@
+-unless @repo.git_hub.is_registered?
+  .warning.message
+    The 
+    =link_to "GitHub install", @repo.git_hub
+    associated with this repository has not 
+    been registered.
+
+-unless @repo.oauth_token
+  .warning.message
+    Almost done. Please 
+    =link_to "Authorize access", {:action=>:send_oauth, :id=>@repo.id}
+
 %p#notice= notice
 
 %p
   %b Github name:
   = @repo.github_name
-%p
-  %b Oauth token:
-  = @repo.oauth_token
-%p
-  %b Host:
-  = @repo.host
-%p
-  %b Api endpoint:
-  = @repo.api_endpoint
 %p
   %b Ticket url:
   = @repo.ticket_url

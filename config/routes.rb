@@ -4,9 +4,11 @@ GithubStatusReport::Application.routes.draw do
 
   get "home/index"
 
+  match "repos/oauth_callback" => "repos#oauth_callback"
   resources :repos do
     member do
       get 'report'
+      get 'send_oauth'
     end
   end
 

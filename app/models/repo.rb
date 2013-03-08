@@ -62,7 +62,7 @@ class Repo < ActiveRecord::Base
   #                     indicates if unmerged pull Requests 
   #                     should be included in the results.
   def get_closed_pull_requests(options)
-    raise "This repo has no GitHub object" if github.nil?
+    raise "This repo has no GitHub object" if git_hub.nil?
     epoch_start_time = DateTime.now().to_time.to_i
     options[:days] = 7 unless options[:days]
 

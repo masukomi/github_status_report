@@ -1,100 +1,94 @@
-= form_for @repo do |f|
-  - if @repo.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@repo.errors.count, "error")} prohibited this repo from being saved:"
-      %ul
-        - @repo.errors.full_messages.each do |msg|
-          %li= msg
+- if @git_hubs.size() > 0
+  = form_for @repo do |f|
+    - if @repo.errors.any?
+      #error_explanation
+        %h2= "#{pluralize(@repo.errors.count, "error")} prohibited this repo from being saved:"
+        %ul
+          - @repo.errors.full_messages.each do |msg|
+            %li= msg
 
-  .field
-    = f.label :github_name
-    = f.text_field :github_name, :class=>'tooltip', 
-      :title=>'Looks like: username/repo', :placeholder=>'username/repo'
-  .field
-    = f.label :oauth_token, "OAuth Token"
-    = f.text_field :oauth_token, :class=>'tooltip', 
-      :title=>"See the documentation for how to generate this", 
-      :placeholder=>"Insert big ugly OAuth token string here"
-    %br
-    .information
-      :markdown
-        ## OAuth Token
+    .field
+      = f.label :git_hub, "Where does this repo live?"
+      - if @git_hubs.size() > 1
+        = f.select :git_hub, options_from_collection_for_select(@git_hubs, 
+          :id, :name)
+      - else
+        = f.hidden_field :git_hub_id, :value=>@git_hubs.first.id
+        %b
+          = @git_hubs.first.name
+        (
+        =link_to("Create a new GitHub install if needed.", new_git_hub_path())
+        )
+    .field
+      = f.label :github_name
+      = f.text_field :github_name, :class=>'tooltip', 
+        :title=>'Looks like: username/repo', :placeholder=>'username/repo'
+    .field
+      = f.label :ticket_url
+      = f.text_field :ticket_url, 
+        :placeholder=>"https://github.com/USERNAME/REPO_NAME_HERE/issues/{{ticket_id}}",
+        :class=>'tooltip', :title=>"An url template we can use to link to your tickets"
+      %br
+      .information
+        :markdown
+          ## Ticket Url
+          Most ticketing systems (including Github's) allow you to link directly
+          to a ticket if you know the id. In github's case you need to know 
+          the user, the project name, and the id. The url you enter here should be the 
+          url of a ticket in your ticket system with the ticket's id replaced 
+          with {{ticket_id}}.
 
-        In order to access your Github repository GSR will need 
-        you to generate an OAuth token. 
-        [Follow these instructions on Github](https://help.github.com/articles/creating-an-oauth-token-for-command-line-use) and save the output to a file. You'll find your token in there. 
+          For Example: GSR's ticket url would be: 
+          `https://github.com/masukomi/github_status_report/issues/{{ticket_id}}`
 
-        Note: If you're running Github enterprise you'll need to change the 
-        url they suggest to be https://github.mycompany.com/api/v3/authorizations
-  .field
-    = f.label :host
-    = f.text_field :host, 
-      :placeholder=>'https://github.com OR https://github.mycompany.com'
-  .field
-    = f.label :api_endpoint
-    = f.text_field :api_endpoint, 
-      :placeholder=>'https://api.github.com OR https://github.mycompany.com/api/v3'
-  .field
-    = f.label :ticket_url
-    = f.text_field :ticket_url, 
-      :placeholder=>"https://github.com/USERNAME/REPO_NAME_HERE/issues/{{ticket_id}}",
-      :class=>'tooltip', :title=>"An url template we can use to link to your tickets"
-    %br
-    .information
-      :markdown
-        ## Ticket Url
-        Most ticketing systems (including Github's) allow you to link directly
-        to a ticket if you know the id. In github's case you need to know 
-        the user, the project name, and the id. The url you enter here should be the 
-        url of a ticket in your ticket system with the ticket's id replaced 
-        with {{ticket_id}}.
+    .field
+      = f.label :branch_naming_convention, 'Branch Naming Convention'
+      = f.text_field :branch_naming_convention, 
+        :placeholder=>':ticket_:project_:type_:title',
+        :class=>'tooltip', :title=>'Using the options below generate a string that describes your branch names'
+      %br
+      .information
+        :markdown
+          ### Branch Naming Convention
+          GSR derives most of its information from the naming convention 
+          you chose from the branches in your repository. To this end we've 
+          come up with a series of items that you can insert into your branch 
+          names, in whatever order works best for you. Everything is optional
+          but leaving out something like :ticket would mean would couldn't 
+          extract the ticket number and link back to your ticketing system.
 
-        For Example: GSR's ticket url would be: 
-        `https://github.com/masukomi/github_status_report/issues/{{ticket_id}}`
+          **All options must be separated with underscores.**
+          
+          The options are:
 
-  .field
-    = f.label :branch_naming_convention, 'Branch Naming Convention'
-    = f.text_field :branch_naming_convention, 
-      :placeholder=>':ticket_:project_:type_:title',
-      :class=>'tooltip', :title=>'Using the options below generate a string that describes your branch names'
-    %br
-    .information
-      :markdown
-        ### Branch Naming Convention
-        GSR derives most of its information from the naming convention 
-        you chose from the branches in your repository. To this end we've 
-        come up with a series of items that you can insert into your branch 
-        names, in whatever order works best for you. Everything is optional
-        but leaving out something like :ticket would mean would couldn't 
-        extract the ticket number and link back to your ticketing system.
+          * :ticket
+            * For most systems this is an integer id that we can insert into
+              the 'ticket_id' portion of the ticket url you specified above.
+          * :project
+            * This should be a short name that indicates what project or client 
+              this work is for. We recommend 3 or four letter abbreviations, but
+              there is no limit.
+          * :type
+            * GSR expects this to be either "bug" or "add". 
+              When it sees "bug" it infers that the pull request is a bug fix.
+              When it sees "add" it inferst that the pull request is adding 
+              new functionality / features to your app.
+          * :title
+            * This is the a short piece of descriptive text to explain what 
+              the branch is about.
 
-        **All options must be separated with underscores.**
-        
-        The options are:
+          #### Examples
+          If you enter `:ticket_id_:project_:type_:title` you should create branch 
+          branch names like `1234_docs_add_create_introductory_readme` GSR would 
+          interpret that as `<ticket_id 1234>_<project docs>_<type add>_<title create introductory readme>`
 
-        * :ticket
-          * For most systems this is an integer id that we can insert into
-            the 'ticket_id' portion of the ticket url you specified above.
-        * :project
-          * This should be a short name that indicates what project or client 
-            this work is for. We recommend 3 or four letter abbreviations, but
-            there is no limit.
-        * :type
-          * GSR expects this to be either "bug" or "add". 
-            When it sees "bug" it infers that the pull request is a bug fix.
-            When it sees "add" it inferst that the pull request is adding 
-            new functionality / features to your app.
-        * :title
-          * This is the a short piece of descriptive text to explain what 
-            the branch is about.
-
-        #### Examples
-        If you enter `:ticket_id_:project_:type_:title` you should create branch 
-        branch names like `1234_docs_add_create_introductory_readme` GSR would 
-        interpret that as `<ticket_id 1234>_<project docs>_<type add>_<title create introductory readme>`
-
-        In the status report it would be grouped with the feauture additions. 
-        It would be linked to ticket 1234 in your ticketing system, and it would 
-        be displayed under the 'docs' project.
-  .actions
-    = f.submit 'Save'
+          In the status report it would be grouped with the feauture additions. 
+          It would be linked to ticket 1234 in your ticketing system, and it would 
+          be displayed under the 'docs' project.
+    .actions
+      = f.submit 'Save'
+- else
+  .warning.message
+    You must first configure a GitHub installation before you can 
+    create any repos.
+  =link_to("Create a new GitHub", new_git_hub_path(), {:class=>'button'})

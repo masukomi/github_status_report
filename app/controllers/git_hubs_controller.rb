@@ -13,7 +13,7 @@ class GitHubsController < ApplicationController
   # GET /git_hubs/1
   # GET /git_hubs/1.json
   def show
-    @git_hub = GitHub.find(params[:id])
+    @git_hub = GitHub.includes(:repos).find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
