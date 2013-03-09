@@ -1,27 +1,23 @@
-%h1 Listing git_hubs
+%h1 Listing GitHub Installations
 
 %table
-  %tr
-    %th Name
-    %th Domain
-    %th Api endpoint
-    %th Client
-    %th Client secret
-    %th
-    %th
-    %th
+  %thead
+    %tr
+      %th Name
+      %th Domain
+      %th Api endpoint
+      %th
 
   - @git_hubs.each do |git_hub|
     %tr
       %td= git_hub.name
       %td= git_hub.domain
       %td= git_hub.api_endpoint
-      %td= git_hub.client_id
-      %td= git_hub.client_secret
       %td= link_to 'Show', git_hub
-      %td= link_to 'Edit', edit_git_hub_path(git_hub)
-      %td= link_to 'Destroy', git_hub, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      /
+        %td= link_to 'Edit', edit_git_hub_path(git_hub)
+        %td= link_to 'Destroy', git_hub, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
-%br
-
-= link_to 'New Git hub', new_git_hub_path
+.row.end_buttons
+  .four.fourths
+    = link_to 'New GitHub Install', new_git_hub_path, {:class=>'button'}

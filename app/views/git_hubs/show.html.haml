@@ -3,24 +3,39 @@
     Looks good. Now let's set up a repo you'd like to report on.
   =link_to "Create a Repo", new_repo_path(), {:class=>'button'}
 
-%p#notice= notice
+-if notice
+  .row
+    .four.fourths
+      #notice= notice
 
-%p
-  %b Name:
-  = @git_hub.name
-%p
-  %b Domain:
-  = @git_hub.domain
-%p
-  %b Api endpoint:
-  = @git_hub.api_endpoint
-%p
-  %b Client:
-  = @git_hub.client_id
-%p
-  %b Client secret:
-  = @git_hub.client_secret
+.row
+  .one.fourths
+    Name:
+  .three.fourths
+    = @git_hub.name
+.row
+  .one.fourths
+    Domain:
+  .three.fourths
+    = @git_hub.domain
+.row
+  .one.fourths
+    Api endpoint:
+  .three.fourths
+    = @git_hub.api_endpoint
 
-= link_to 'Edit', edit_git_hub_path(@git_hub)
-\|
-= link_to 'Back', git_hubs_path
+/
+  .row
+    .one.fourths
+      Client:
+    .three.fourths
+      = @git_hub.client_id
+  .row
+    .one.fourths
+      Client secret:
+    .three.fourths
+      = @git_hub.client_secret
+
+.row.end_buttons
+  .four.fourths
+    = link_to 'Edit', edit_git_hub_path(@git_hub), {:class=>'button'}
