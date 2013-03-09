@@ -69,14 +69,18 @@ class PullRequest #< ActiveRecord::Base
     # *in that repo*
     creator = Contributor.new(
       :login=>pull_data['user']['login'],
-      :github_url=>pull_data['user']['url']
+      :github_url=>repo.git_hub.convert_api_url_to_web(
+        pull_data['user']['url'], :user
       )
+    )
     pr.creator = creator
     if (pull_data['assignee'] and pull_data['assignee'].size() > 0)
       assignee = Contributor.new(
         :login=>pull_data['assignee']['login'],
-        :github_url=> pull_data['assignee']['url']
+        :github_url=> repo.git_hub.convert_api_url_to_web(
+        pull_data['assignee']['url'], :user
         )
+      )
       pr.assignee = assignee
     end
 
@@ -126,4 +130,6 @@ class PullRequest #< ActiveRecord::Base
     end
     return full_branch.sub(/.*?:/, '')
   end
+
+  
 end

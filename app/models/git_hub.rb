@@ -9,6 +9,20 @@ class GitHub < ActiveRecord::Base
     return (! client_id.blank? and ! client_secret.blank?)
   end
 
+  # Public - converts api style urls to their web visible
+  #          counterparts
+  # url - the url to convert
+  # url_type - a symbol telling it what kind of 
+  #            url it needs to translate. Currently supported options:
+  #            :user
+  def convert_api_url_to_web(url, url_type)
+    if url_type == :user
+      return "#{domain}/#{url.sub(/^.*\//, '')}"
+    else
+      raise "Unsupported URL type: #{url_type}"
+    end
+  end
+
 protected
 
   # Protected - removes trailing slashes from urls
