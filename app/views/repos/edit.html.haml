@@ -1,4 +1,11 @@
-%h1 Editing repo
+=content_for :title do
+  GSR - Editing 
+  =@repo.github_name
+
+
+%h1 
+  Editing
+  =@repo.github_name
 
 = render 'form'
 
