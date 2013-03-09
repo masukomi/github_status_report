@@ -1,25 +1,32 @@
 %h1 Listing repos
 
 %table
-  %tr
-    %th Github name
-    %th Oauth token
-    %th Ticket url
-    %th Branch naming convention
-    %th
-    %th
-    %th
-
-  - @repos.each do |repo|
+  %thead
     %tr
-      %td= repo.github_name
-      %td= repo.oauth_token
-      %td= repo.ticket_url
-      %td= repo.branch_naming_convention
-      %td= link_to 'Show', repo
-      %td= link_to 'Edit', edit_repo_path(repo)
-      %td= link_to 'Destroy', repo, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      %th{:colspan=>2}
+        GitHub Installation
+    %tr
+      -# the style is .secondary_table_header in gsr.css.scss
+      -# but the groundwork css keeps overriding it. :/
+      %th{:style=>"background: #1dabb8;color: white;"}
+        Repo Name
+      %th{:style=>"background: #1dabb8;color: white;"}
+        &nbsp;
+  %tbody
+    -@git_hubs.each do |gh|
+      %tr
+        %th{:colspan=>2}
+          =gh.name
+      -gh.repos.sort_by(&:github_name).each do |repo|
+        %tr
+          %td
+            %b
+              =repo.github_name
+          %td
+            = link_to 'Show', repo
+            /%td= link_to 'Destroy', repo, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
 
 %br
 
-= link_to 'New Repo', new_repo_path
+= link_to 'New Repo', new_repo_path, {:class=>'button'}

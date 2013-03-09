@@ -10,18 +10,26 @@
     Almost done. Please 
     =link_to "Authorize access", {:action=>:send_oauth, :id=>@repo.id}
 
-%p#notice= notice
+-if notice
+  .row
+    .four.fourths
+      #notice= notice
 
-%p
-  %b Github name:
-  = @repo.github_name
-%p
-  %b Ticket url:
-  = @repo.ticket_url
-%p
-  %b Branch naming convention:
-  = @repo.branch_naming_convention
-
-= link_to 'Edit', edit_repo_path(@repo)
-\|
-= link_to 'Back', repos_path
+.row
+  .one.fourths
+    Name on GitHub:
+  .three.fourths
+    = @repo.github_name
+.row
+  .one.fourths
+    Ticket url:
+  .three.fourths
+    = @repo.ticket_url
+.row
+  .one.fourths
+    Branch naming convention:
+  .three.fourths
+    = @repo.branch_naming_convention
+.row.end_buttons
+  .four.fourths
+    = link_to 'Edit', edit_repo_path(@repo), {:class=>'button'}
