@@ -75,6 +75,7 @@ class ReposController < ApplicationController
 
   # GET /repos/1/edit
   def edit
+    @git_hubs = GitHub.all
     @repo = Repo.find(params[:id])
   end
 
@@ -100,7 +101,9 @@ class ReposController < ApplicationController
   # PUT /repos/1
   # PUT /repos/1.json
   def update
+    git_hub_id = params[:repo].delete(:git_hub_id).to_i
     @repo = Repo.find(params[:id])
+    @repo.git_hub_id = git_hub_id
 
     respond_to do |format|
       if @repo.update_attributes(params[:repo])

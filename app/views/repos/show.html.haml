@@ -1,35 +1,44 @@
--unless @repo.git_hub.is_registered?
-  .warning.message
-    The 
-    =link_to "GitHub install", @repo.git_hub
-    associated with this repository has not 
-    been registered.
+-if ! @repo.git_hub.nil?
+  -unless @repo.git_hub.is_registered?
+    .warning.message
+      The 
+      =link_to "GitHub install", @repo.git_hub
+      associated with this repository has not 
+      been registered.
 
--unless @repo.oauth_token
-  .warning.message
-    Almost done. Please 
-    =link_to "Authorize access", {:action=>:send_oauth, :id=>@repo.id}
+  -unless @repo.oauth_token
+    .warning.message
+      Almost done. Please 
+      =link_to "Authorize access", {:action=>:send_oauth, :id=>@repo.id}
 
--if notice
+  -if notice
+    .row
+      .four.fourths
+        #notice= notice
+
   .row
+    .one.fourths
+      Name on GitHub:
+    .three.fourths
+      = @repo.github_name
+  .row
+    .one.fourths
+      Ticket url:
+    .three.fourths
+      = @repo.ticket_url
+  .row
+    .one.fourths
+      Branch naming convention:
+    .three.fourths
+      = @repo.branch_naming_convention
+  .row.end_buttons
     .four.fourths
-      #notice= notice
+      = link_to 'Edit', edit_repo_path(@repo), {:class=>'button'}
+-else
+  -# no github - configuration issue. can't happen
+  .row.end_buttons
+    .four.fourths
+      .error.message
+        This repo has no GitHub install associated with it! 
 
-.row
-  .one.fourths
-    Name on GitHub:
-  .three.fourths
-    = @repo.github_name
-.row
-  .one.fourths
-    Ticket url:
-  .three.fourths
-    = @repo.ticket_url
-.row
-  .one.fourths
-    Branch naming convention:
-  .three.fourths
-    = @repo.branch_naming_convention
-.row.end_buttons
-  .four.fourths
-    = link_to 'Edit', edit_repo_path(@repo), {:class=>'button'}
+      = link_to 'Correct this problem', edit_repo_path(@repo), {:class=>'button'}
