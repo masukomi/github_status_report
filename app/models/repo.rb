@@ -84,6 +84,7 @@ class Repo < ActiveRecord::Base
     closed_pull_requests_data.each do | cpr |
       pr = PullRequest.create_from_pull_and_repo(cpr, self)
       # skip unmerged unless options[:include_unmerged]
+      next if (! options[:project_name].blank? and pr.project != options[:project_name])
       next if (! pr.merged_at and not options[:include_unmerged])
       # skip unless within past option[:days] days
       epoch_merged_date = pr.merged_at.to_time.to_i

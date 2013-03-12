@@ -20,6 +20,11 @@
         .one.thirds
           =select_tag 'type', options_for_select([['All', ''],['Bugs', 'bug'],['Features', 'add']], @type)
       .row
+        .one.thirds
+          =f.label :project_name
+        .one.thirds
+          =select_tag 'project_name', options_for_select([['All', '']] + @project_names.map{|pn| [pn, pn]}, @project_name)
+      .row
         .two.thirds
           =f.submit 'Search'
   .four.fifths
@@ -46,12 +51,11 @@
           -[:bugs, :adds, :unknown].each do |type|
             -if spr[type].size() > 0
               -if type == :bugs
-                %h3 Bug Fixes
+                %h3.ticket_type Bug Fixes
               -elsif type == :adds
-                %h3 New Features
+                %h3.ticket_type New Features
               -else
-                %h3
-                  Misc.
+                %h3.ticket_type Misc.
               -spr[type].each do |pr|
                 =render(:partial=>'pull_request_listing', 
                   :locals=>{:pr=>pr, :repo=>@repo}) 

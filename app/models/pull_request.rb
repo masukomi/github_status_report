@@ -5,7 +5,6 @@ class PullRequest #< ActiveRecord::Base
   #belongs_to :contributor  # who created the pull request
   #belongs_to :repo
   attr_accessor :ticket_id,
-  #attr_accessible :ticket_id, 
                   :repo,
                   :project,
                   :title, 
