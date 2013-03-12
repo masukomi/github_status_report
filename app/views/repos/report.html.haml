@@ -23,7 +23,7 @@
         .one.thirds
           =f.label :project_name
         .one.thirds
-          =select_tag 'project_name', options_for_select([['All', '']] + @project_names.map{|pn| [pn, pn]}, @project_name)
+          =select_tag 'project_name', options_for_select([['All', '']] + @repo.projects.map{|p| [p.name, p.name]}, @project_name)
       .row
         .two.thirds
           =f.submit 'Search'
@@ -41,13 +41,13 @@
       = Time.now.strftime("%m/%d")
 
       -#TODO break them down by project and type (sorted by date within that)
-      -@sorted_pull_requests.keys.sort.each do |key|
-        -spr = @sorted_pull_requests[key]
+      -@sorted_pull_requests.keys.sort_by(&:name).each do |project|
+        -spr = @sorted_pull_requests[project]
         -# spr = #{:bugs=>[...], :adds=>[...], :unknown=>[...]}
         .project_section
           %h2.project_heading
             Project: 
-            =(key == '' ? 'Unspecified' : key)
+            =(project.name == '' ? 'Unspecified' : project.name)
           -[:bugs, :adds, :unknown].each do |type|
             -if spr[type].size() > 0
               -if type == :bugs

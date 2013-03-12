@@ -45,15 +45,26 @@ class PullRequest #< ActiveRecord::Base
       pr.type = nil
     end
 
+    project_name = nil
     if project_names.size() == 0
-      pr.project = bnd[:project]
+      project_name = bnd[:project]
     else
       if project_names.include? bnd[:project]
-        pr.project = bnd[:project]
+        project_name = bnd[:project]
       else
-        pr.project = UNKNOWN_PROJECT_NAME
+        project_name = UNKNOWN_PROJECT_NAME
       end
     end
+    if project_names.include? project_name
+      pr.project = repo.projects.reject{|p|p.name != project_name}.first
+    else
+      new_project = Project.create(:name=>project_name)
+      new_project.repo = repo
+      new_project.save!()
+      pr.project = new_project
+      project_names << project_name
+    end
+
     if pr.title != pr.from_branch.sub('_', ' ')
       pr.title = pull_data['title']
     else
