@@ -7,19 +7,21 @@
   -if pr.type and ['bug', 'add'].include? pr.type
     =pr.type == 'bug' ? 'Bug' : "Feature #{pr.type.inspect}"
   =pr.title
-%p
-  Pull request 
-  =link_to("##{pr.number}", pr.url)
-  created by
-  =link_to(pr.creator.login, pr.creator.github_url)
-  -if pr.assignee
-    Reviewed by
-    =link_to(pr.assignee.login, pr.assignee.github_url)
-  and merged on
-  =pr.merged_at.strftime("%m/%d")
 
-%p
-  ="#{pr.from_branch}->#{pr.to_branch}"
-/
-  =pr.raw_bn_data.inspect
+.pull_request_details
+  %p
+    Pull request 
+    =link_to("##{pr.number}", pr.url)
+    created by
+    =link_to(pr.creator.login, pr.creator.github_url)
+    -if pr.assignee
+      Reviewed by
+      =link_to(pr.assignee.login, pr.assignee.github_url)
+    and merged on
+    =pr.merged_at.strftime("%m/%d")
+
+  %p
+    ="#{pr.from_branch}->#{pr.to_branch}"
+  /
+    =pr.raw_bn_data.inspect
 
