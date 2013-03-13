@@ -13,7 +13,10 @@
     Pull request 
     =link_to("##{pr.number}", pr.url)
     created by
-    =link_to(pr.creator.login, pr.creator.github_url)
+    -if pr.creator
+      =link_to(pr.creator.login, pr.creator.github_url)
+    -else
+      Unknown
     -if pr.assignee
       Reviewed by
       =link_to(pr.assignee.login, pr.assignee.github_url)
