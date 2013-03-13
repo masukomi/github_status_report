@@ -35,7 +35,7 @@ class PullRequest #< ActiveRecord::Base
     pr.from_branch = self.get_branch_from_pull(pull_data, :from)
     pr.to_branch = self.get_branch_from_pull(pull_data, :to)
     #to_branch = get_branch_from_pull(p, :to)
-    bnd = self.extract_data_from_branch_name(pr.from_branch, repo.branch_naming_convention)
+    bnd = self.extract_data_from_branch_name(pr.from_branch, repo)
       # bnd: Branch Name Data
     pr.raw_bn_data=bnd
     pr.ticket_id = bnd[:ticket]   #might be nil
@@ -58,10 +58,16 @@ class PullRequest #< ActiveRecord::Base
     if project_names.include? project_name
       pr.project = repo.projects.reject{|p|p.name != project_name}.first
     else
-      new_project = Project.create(:name=>project_name)
-      new_project.repo = repo
-      new_project.save!()
-      pr.project = new_project
+      begin
+        new_project = Project.create(:name=>project_name)
+        new_project.repo = repo
+        new_project.save!()
+        pr.project = new_project
+      rescue
+        # this can happen in an extreme dev only
+        # edge case that shouldn't ever happen
+        Rails.logger.warning("Tried to create new project that already existed")
+      end
       project_names << project_name
     end
 
@@ -111,15 +117,11 @@ class PullRequest #< ActiveRecord::Base
   #
   # branch_name - the name from which to extract data
   # branch_naming_convention - tells us how to parse the branch name
-  def self.extract_data_from_branch_name(branch_name, branch_naming_convention)
-    keys = branch_naming_convention.split('_').map{
-      |key| key.start_with?(':') ? key[1..key.length] : key
-    }
-    # an array of the things that we need to look for in the name
-    regexp_string = ('(.*?)_' * (keys.length() -1)) + "(.*)"
+  def self.extract_data_from_branch_name(branch_name, repo)
+    regexp = repo.get_regexp_for_branch_names()
 
     data = {}
-    m = /#{regexp_string}/.match(branch_name)
+    m = regexp.match(branch_name)
     unless m.nil?
       (1..keys.length).each do |idx|
         key = keys[idx - 1].to_sym

@@ -40,7 +40,8 @@
       as of 
       = Time.now.strftime("%m/%d")
 
-      -#TODO break them down by project and type (sorted by date within that)
+    -#TODO break them down by project and type (sorted by date within that)
+    -if @sorted_pull_requests.size() > 0
       -@sorted_pull_requests.keys.sort_by(&:name).each do |project|
         -spr = @sorted_pull_requests[project]
         -# spr = #{:bugs=>[...], :adds=>[...], :unknown=>[...]}
@@ -59,3 +60,8 @@
               -spr[type].each do |pr|
                 =render(:partial=>'pull_request_listing', 
                   :locals=>{:pr=>pr, :repo=>@repo}) 
+    -else 
+      .message
+        Nothing found in the past 
+        =@days
+        days. Get crackin'!

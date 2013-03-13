@@ -9,10 +9,13 @@ class Repo < ActiveRecord::Base
   validates_presence_of :git_hub
 
   #TODO add support for octokit proxy param
+  #TODO validate :branch_naming_convention
   attr_accessible :branch_naming_convention, 
                   :github_name, 
                   :oauth_token, 
-                  :ticket_url
+                  :ticket_url,
+                  :numeric_tickets 
+                    # boolean indicating if ticket ids are numeric or not.
 
 
 
@@ -96,6 +99,49 @@ class Repo < ActiveRecord::Base
 
     return closed_pull_requests
   end
+  
+  # Public: extracts the "keys" from a branch name
+  #         Keys being the named sections of the expected branch names.
+  def get_branch_name_keys
+    keys = branch_naming_convention.split('_').map{
+      |key| key.start_with?(':') ? key[1..key.length] : key
+    }
+    return keys
+  end
 
+
+  # Public: returns a regular expression that will 
+  #         match the branch naming convention 
+  #         specified by the user
+  # as_string - by default it will return a RegExp object
+  #             passing true to as_string will return 
+  #             the raw string that would normally be 
+  #             converted to the regexp. This is primarily
+  #             to facilitate testing.
+  def get_regexp_for_branch_names(as_string = false)
+    keys = get_branch_name_keys()
+    # an array of the things that we need to look for in the name
+    regexp_string = nil
+    if (numeric_tickets?)
+      if keys.length > 1
+        regexp_string = ''
+        (0...(keys.length)).each do |idx|
+          if keys[idx] != 'ticket' || ! numeric_tickets
+            regexp_string+='(.*?)'
+          else
+            regexp_string+='\d+'
+          end
+          if idx < (keys.length() -1)
+            regexp_string +='_'
+          end
+        end
+      else
+        regexp_string = "(.*)"
+      end
+    else
+      regexp_string = ('(.*?)_' * (keys.length() -1)) + "(.*)"
+    end
+    return (as_string ? regexp_string : Regexp.new(regexp_string))
+  end
 
 end
