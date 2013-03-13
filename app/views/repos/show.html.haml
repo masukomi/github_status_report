@@ -28,6 +28,11 @@
       = @repo.ticket_url
   .row
     .one.fourths
+      Are Ticket IDs numeric?:
+    .three.fourths
+      = @repo.numeric_tickets? ? 'Yes' : 'No'
+  .row
+    .one.fourths
       Branch naming convention:
     .three.fourths
       = @repo.branch_naming_convention
