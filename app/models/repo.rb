@@ -113,16 +113,21 @@ class Repo < ActiveRecord::Base
   # Public: returns a regular expression that will 
   #         match the branch naming convention 
   #         specified by the user
-  # as_string - by default it will return a RegExp object
-  #             passing true to as_string will return 
+  # options  - options to control the output (default: {})
+  #             :as_string by default it will return a RegExp object
+  #             setting :as_string (symbol) to true will return 
   #             the raw string that would normally be 
   #             converted to the regexp. This is primarily
   #             to facilitate testing.
-  def get_regexp_for_branch_names(as_string = false)
+  #             :
+  # 
+  def get_regexp_for_branch_names(options={})
+    options[:as_string] = false if options[:as_string].blank?
+    options[:ignore_numeric] = false if options[:ignore_numeric].blank?
     keys = get_branch_name_keys()
     # an array of the things that we need to look for in the name
     regexp_string = nil
-    if (numeric_tickets?)
+    if (numeric_tickets? and not options[:ignore_numeric])
       if keys.length > 1
         regexp_string = ''
         (0...(keys.length)).each do |idx|
@@ -141,7 +146,7 @@ class Repo < ActiveRecord::Base
     else
       regexp_string = ('(.*?)_' * (keys.length() -1)) + "(.*)"
     end
-    return (as_string ? regexp_string : Regexp.new(regexp_string))
+    return (options[:as_string] ? regexp_string : Regexp.new(regexp_string))
   end
 
 end

@@ -124,6 +124,14 @@ class PullRequest #< ActiveRecord::Base
     keys = repo.get_branch_name_keys()
     data = {}
     m = regexp.match(branch_name)
+    matched_with_number = repo.numeric_tickets? and ! m.nil?
+    if m.nil? and repo.numeric_tickets?
+      # the branch name not matching the expected pattern
+      # is almost guaranteed to be because of not finding ticket info.
+      regexp = repo.get_regexp_for_branch_names({:ignore_numeric=>true})
+      m = regexp.match(branch_name)
+    end
+
     unless m.nil?
       (1..keys.length).each do |idx|
         key = keys[idx - 1].to_sym
