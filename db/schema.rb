@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130307135350) do
+ActiveRecord::Schema.define(:version => 20130312233723) do
 
   create_table "contributors", :force => true do |t|
     t.string   "name"
@@ -52,9 +52,10 @@ ActiveRecord::Schema.define(:version => 20130307135350) do
     t.string   "oauth_token"
     t.string   "ticket_url"
     t.string   "branch_naming_convention"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.integer  "git_hub_id"
+    t.boolean  "numeric_tickets",          :default => true
   end
 
 end

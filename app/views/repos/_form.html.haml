@@ -40,7 +40,9 @@
 
           For Example: GSR's ticket url would be: 
           `https://github.com/masukomi/github_status_report/issues/{{ticket_id}}`
-
+    .field
+      = f.label :numeric_tickets, "Check if ticket ids are numeric"
+      = f.check_box :numeric_tickets
     .field
       = f.label :branch_naming_convention, 'Branch Naming Convention'
       = f.text_field :branch_naming_convention, 
