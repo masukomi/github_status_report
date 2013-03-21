@@ -13,4 +13,5 @@
 //= require jquery
 //= require jquery_ujs
 //= require groundwork
+//= require chart
 //= require_tree .

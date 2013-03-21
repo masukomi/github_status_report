@@ -40,6 +40,14 @@ class ReposController < ApplicationController
     @sorted_pull_requests = @repo.get_sorted_pull_requests(options)
                                           # false: don't include unmerged
                                           # comes pre-sorted
+    pull_requests = []
+    @sorted_pull_requests.keys.each do |proj|
+      pull_requests << @sorted_pull_requests[proj][:bugs]
+      pull_requests << @sorted_pull_requests[proj][:adds]
+      pull_requests << @sorted_pull_requests[proj][:unknown]
+    end
+    pull_requests.flatten!
+    @pull_requests_by_day = Repo.sort_pull_recs_by_day(pull_requests)
     @project_names = @sorted_pull_requests.keys.sort()
 
   end

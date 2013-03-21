@@ -36,6 +36,8 @@ GEM
     binding_of_caller (0.7.1)
       debug_inspector (>= 0.0.1)
     builder (3.0.4)
+    chartjs-rails (0.1)
+      railties (>= 3.1)
     coderay (1.0.9)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -148,6 +150,7 @@ PLATFORMS
 DEPENDENCIES
   better_errors
   binding_of_caller
+  chartjs-rails
   coffee-rails (~> 3.2.1)
   debugger
   groundworkcss-rails

@@ -1,7 +1,38 @@
 =content_for :title do
   Status Report for
   =@repo.github_name
+=content_for :trailing_js do
+  -if @pull_requests_by_day.size() > 0
+    var pulls_by_day_canvas = $("#pulls_by_day_graph")
+    pulls_by_day_canvas[0].setAttribute('width', $('#graph_section').width())
+    pulls_by_day_canvas[0].setAttribute('height', $('#graph_section').height())
 
+    var ctx = pulls_by_day_canvas.get(0).getContext("2d");
+    var data={
+    labels: [
+    -@pull_requests_by_day.keys.sort.each do |day|
+      ="'#{day.strftime("%a %e")}',"
+    ''
+    ],
+    datasets: [
+    {
+    fillColor : "rgba(151,187,205,0.5)",
+    strokeColor : "rgba(151,187,205,1)",
+    pointColor : "rgba(151,187,205,1)",
+    pointStrokeColor : "#fff",
+    data : [
+    -@pull_requests_by_day.keys.sort.each do |day|
+      ="#{@pull_requests_by_day[day].size()},"
+    0
+    ]
+    },
+    ]
+    };
+
+    data.labels.pop();
+    data.datasets[0].data.pop();
+
+    var myNewChart = new Chart(ctx).Line(data);
 .row
   .one.fifth.no_print
     %h3 Search for pulls:
@@ -42,6 +73,10 @@
 
     -#TODO break them down by project and type (sorted by date within that)
     -if @sorted_pull_requests.size() > 0
+
+      #graph_section
+        %canvas{:id=>'pulls_by_day_graph', :width=>"620", :height=>"120"}
+        -# Those are default width and height. Will be overridden in JS
       -@sorted_pull_requests.keys.sort_by(&:name).each do |project|
         -spr = @sorted_pull_requests[project]
         -# spr = #{:bugs=>[...], :adds=>[...], :unknown=>[...]}

@@ -14,6 +14,7 @@ gem 'mustache'
 gem 'redcarpet'
 gem 'json'
 gem 'octokit'
+gem 'chartjs-rails'
 
 group :development do
   gem "better_errors"

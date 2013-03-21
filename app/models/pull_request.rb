@@ -84,13 +84,16 @@ class PullRequest #< ActiveRecord::Base
     #TODO make the Contributor model suck down all the pertinent info
     # and create a new object if one wasn't found with that login
     # *in that repo*
-    creator = Contributor.new(
-      :login=>pull_data['user']['login'],
-      :github_url=>repo.git_hub.convert_api_url_to_web(
-        pull_data['user']['url'], :user
+    
+    if (pull_data['user'] and pull_data['user'].size() > 0)
+      creator = Contributor.new(
+        :login=>pull_data['user']['login'],
+        :github_url=>repo.git_hub.convert_api_url_to_web(
+          pull_data['user']['url'], :user
+        )
       )
-    )
-    pr.creator = creator
+      pr.creator = creator
+    end
     if (pull_data['assignee'] and pull_data['assignee'].size() > 0)
       assignee = Contributor.new(
         :login=>pull_data['assignee']['login'],
