@@ -18,7 +18,6 @@ class Repo < ActiveRecord::Base
                     # boolean indicating if ticket ids are numeric or not.
 
 
-
   # Public:  returns a sorted collection of pull RequestS
   #           TEMPORARILY limited to closed pull requests
   # options - options to control filtering of results
@@ -151,6 +150,38 @@ class Repo < ActiveRecord::Base
       end
     end
     return (options[:as_string] ? regexp_string : Regexp.new(regexp_string))
+  end
+
+  # Public: groups pull requests by day of creation
+  #
+  # pull_requests: An array of PullRequest objects.
+  #                If it's a hash it will ignore the keys
+  #                and assume the values are PullRequests
+  #
+  # returns: a hash of pull requests with the keys being the day
+  #          they were created, and the values being a sorted 
+  #          array of pull requests.
+  def self.sort_pull_recs_by_day(pull_requests)
+    if pull_requests.is_a? Hash
+      pull_requests = pull_requests.values()
+    elsif ! pull_requests.is_a? Array
+      raise "Unexpected object type passed: #{pull_requests.class.name}"
+    end
+
+    response = {}
+    pull_requests.each do |pr|
+      pr_date = pr.created_at.at_beginning_of_day#.to_i
+        # using epoch time so that we don't have to worry
+        # about different date objects w/same time as keys 
+      unless response.has_key? pr_date
+        response[pr_date] = []
+      end
+      response[pr_date] << pr
+    end
+    response.keys.each do |date|
+      response[date].sort_by!(&:created_at)
+    end
+    return response
   end
 
 end

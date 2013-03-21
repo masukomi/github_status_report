@@ -37,5 +37,22 @@ class RepoTest < ActiveSupport::TestCase
       assert_equal '^(.*)', repo.get_regexp_for_branch_names({:as_string=>true})
   end
 
-  
+  test "sort_pull_recs_by_day" do
+    pr1 = PullRequest.new()
+      pr1.created_at = 2.days.ago.at_beginning_of_day
+      pr1.ticket_id = 1
+    pr2 = PullRequest.new()
+      pr2.created_at = 2.days.ago.at_beginning_of_day
+      pr2.ticket_id = 2
+    pr3 = PullRequest.new()
+      pr3.created_at = 3.days.ago.at_beginning_of_day
+      pr3.ticket_id = 3
+
+    pull_requests = [pr2,pr1,pr3]
+
+    response = Repo.sort_pull_recs_by_day(pull_requests)
+    sorted_response_keys = response.keys.sort # [3 days ago, 2 days ago]
+    assert_equal 2, response.keys.size()
+    assert_equal 3.days.ago.at_beginning_of_day, sorted_response_keys.first
+  end
 end
