@@ -1,6 +1,6 @@
 class PullRequest #< ActiveRecord::Base
   UNKNOWN_PROJECT_NAME='unknown'
-  KNOWN_TYPES=['bug', 'add', nil]
+  KNOWN_TYPES=['bug', 'add', 'sec', nil]
   #belongs_to :project
   #belongs_to :contributor  # who created the pull request
   #belongs_to :repo
