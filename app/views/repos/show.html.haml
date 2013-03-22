@@ -33,7 +33,8 @@
       = @repo.branch_naming_convention
   .row.end_buttons
     .four.fourths
-      = link_to 'Edit', edit_repo_path(@repo), {:class=>'button'}
+      = link_to('View Report', report_repo_path(@repo), {:class=>'button'})
+      = link_to('Edit', edit_repo_path(@repo), {:class=>'button'})
 -else
   -# no github - configuration issue. can't happen
   .row.end_buttons
